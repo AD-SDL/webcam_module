@@ -1,0 +1,14 @@
+version: "3.0"
+name: webcam_module
+services:
+  webcam_node:
+    image: webcam_module
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: python /webcam_module/src/webcam_rest_node.py
+    privileged: true
+    volumes:
+      - /dev/video0:/dev/video0
+    ports:
+      - 2001:2000
