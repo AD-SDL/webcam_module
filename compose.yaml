@@ -2,7 +2,7 @@ version: "3.0"
 name: webcam_module
 services:
   webcam_node:
-    image: webcam_module
+    image: ghcr.io/ad-sdl/webcam_module
     build:
       context: .
       dockerfile: Dockerfile
