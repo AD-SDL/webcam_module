@@ -1,0 +1,15 @@
+name: Test Webcam Module
+metadata:
+  author: Ryan D. Lewis
+  info: Tests the functionality of the Webcam Module
+  version: 0.1
+
+modules:
+  - name: webcam
+
+flowdef:
+  - name: Take Picture
+    module: webcam
+    action: take_picture
+    args:
+      file_name: "snapshot.jpg"

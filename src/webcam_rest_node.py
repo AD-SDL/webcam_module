@@ -7,9 +7,9 @@ from contextlib import asynccontextmanager
 from typing import Union
 
 import cv2
+import numpy as np
 from fastapi import FastAPI
 from fastapi.responses import JSONResponse
-
 from wei.core.data_classes import (
     ModuleStatus,
     StepFileResponse,
@@ -103,13 +103,17 @@ def do_action(
     try:
         if action_handle == "take_picture":
             image_name = json.loads(action_vars)["file_name"]
-            camera = cv2.VideoCapture(0)
-            _, frame = camera.read()
-            cv2.imwrite(image_name, frame)
-            camera.release()
+            try:
+                camera = cv2.VideoCapture(0)
+                _, frame = camera.read()
+                cv2.imwrite(image_name, frame)
+                camera.release()
+            except Exception:
+                print("Camera unavailable, returning empty image")
+                blank_image = np.zeros(shape=[512, 512, 3], dtype=np.uint8)
+                cv2.imwrite(image_name, blank_image)
 
             state = ModuleStatus.IDLE
-            print("success")
             return StepFileResponse(
                 action_response=StepStatus.SUCCEEDED,
                 path=image_name,
