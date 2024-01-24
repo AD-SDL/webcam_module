@@ -31,4 +31,8 @@ RUN --mount=type=cache,target=/home/${CONTAINER_USER}/.cache,uid=${USER_ID},gid=
 CMD ["python", "webcam_module/src/webcam_rest_node.py"]
 
 #########################################
+# Enable automatic host user matching
 USER root
+
+# Add user to video group to access webcam
+RUN usermod -a -G video app

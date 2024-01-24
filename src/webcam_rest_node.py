@@ -4,6 +4,7 @@ REST-based node that interfaces with WEI and provides a USB camera interface
 import json
 from argparse import ArgumentParser
 from contextlib import asynccontextmanager
+from pathlib import Path
 from typing import Union
 
 import cv2
@@ -11,11 +12,15 @@ import numpy as np
 from fastapi import FastAPI
 from fastapi.responses import JSONResponse
 from wei.core.data_classes import (
+    ModuleAbout,
+    ModuleAction,
+    ModuleActionArg,
     ModuleStatus,
     StepFileResponse,
     StepResponse,
     StepStatus,
 )
+from wei.helpers import extract_version
 
 state: ModuleStatus
 
@@ -61,7 +66,29 @@ def get_state() -> JSONResponse:
 async def about() -> JSONResponse:
     """Returns a description of the actions and resources the module supports"""
     global state
-    return JSONResponse(content={"State": state})
+    about = ModuleAbout(
+        name="Webcam Module",
+        description="A module that interfaces with a USB camera",
+        interface="wei_rest_node",
+        version=extract_version(Path(__file__).parent.parent / "pyproject.toml"),
+        actions=[
+            ModuleAction(
+                name="take_picture",
+                description="Take a picture from the webcam",
+                args=[
+                    ModuleActionArg(
+                        name="file_name",
+                        description="Name of the file to save the image to",
+                        type="str",
+                        required=False,
+                        default="image.jpg",
+                    )
+                ],
+            )
+        ],
+        resource_pools=[],
+    )
+    return JSONResponse(content=about.model_dump(mode="json"))
 
 
 @app.get("/resources")
@@ -102,7 +129,7 @@ def do_action(
     state = ModuleStatus.BUSY
     try:
         if action_handle == "take_picture":
-            image_name = json.loads(action_vars)["file_name"]
+            image_name = json.loads(action_vars).get("file_name", "image.jpg")
             try:
                 camera = cv2.VideoCapture(0)
                 _, frame = camera.read()

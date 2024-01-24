@@ -1,6 +1,6 @@
 [project]
 name = "webcam_module"
-version = "1.1.0"
+version = "1.2.0"
 description = "A simple module that supports taking snapshots with a webcam or other video device."
 authors = [{name = "Ryan D. Lewis", email="ryan.lewis@anl.gov"}]
 dependencies = [
