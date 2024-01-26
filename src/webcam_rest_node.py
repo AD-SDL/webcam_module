@@ -130,20 +130,22 @@ def do_action(
     try:
         if action_handle == "take_picture":
             image_name = json.loads(action_vars).get("file_name", "image.jpg")
+            image_path = Path("~/.wei/temp").expanduser() / image_name
+            image_path.parent.mkdir(parents=True, exist_ok=True)
             try:
                 camera = cv2.VideoCapture(0)
                 _, frame = camera.read()
-                cv2.imwrite(image_name, frame)
+                cv2.imwrite(str(image_path), frame)
                 camera.release()
             except Exception:
                 print("Camera unavailable, returning empty image")
                 blank_image = np.zeros(shape=[512, 512, 3], dtype=np.uint8)
-                cv2.imwrite(image_name, blank_image)
+                cv2.imwrite(str(image_path), blank_image)
 
             state = ModuleStatus.IDLE
             return StepFileResponse(
                 action_response=StepStatus.SUCCEEDED,
-                path=image_name,
+                path=image_path,
                 action_log="",
             )
         else:

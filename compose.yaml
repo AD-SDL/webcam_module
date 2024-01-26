@@ -11,10 +11,12 @@ services:
       dockerfile: Dockerfile
     command: python webcam_module/src/webcam_rest_node.py --port 2000
     privileged: true
+    env_file: .env
     volumes:
       - ${DEVICE}:/dev/video0
-      - ./src:/home/app/webcam_module/src
-      - ./tests:/home/app/webcam_module/tests
+      # - ./src:/home/app/webcam_module/src
+      # - ./tests:/home/app/webcam_module/tests
+      # - ${WEI_DATA_DIR}:/home/app/.wei
     ports:
       - 2000:2000
     depends_on:
