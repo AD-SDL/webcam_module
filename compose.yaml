@@ -9,6 +9,10 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+      tags:
+        - ${IMAGE}:latest
+        - ${IMAGE}:${PROJECT_VERSION}
+        - ${IMAGE}:dev
     command: python webcam_module/src/webcam_rest_node.py --port 2000
     privileged: true
     env_file: .env

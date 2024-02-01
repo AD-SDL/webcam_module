@@ -16,8 +16,8 @@ checks: # Runs all the pre-commit checks
 	@pre-commit install
 	@pre-commit run --all-files || { echo "Checking fixes\n" ; pre-commit run --all-files; }
 
-test: init # Runs all the tests
-	docker compose -f $(COMPOSE_FILE) exec -u app $(APP_NAME) pytest -p no:cacheprovider ${MODULE_NAME} $(args)
+test: init start # Runs all the tests
+	$(DC) exec $(APP_NAME) pytest -p no:cacheprovider ${MODULE_NAME} $(args)
 
 ################################################################################
 
