@@ -37,6 +37,15 @@ class TestWEI_Base(unittest.TestCase):
             time.sleep(1)
             if time.time() - start_time > 60:
                 raise TimeoutError("Server did not start in 60 seconds")
+        while True:
+            try:
+                if requests.get(self.module_url + "/state").status_code == 200:
+                    break
+            except Exception:
+                pass
+            time.sleep(1)
+            if time.time() - start_time > 60:
+                raise TimeoutError("Module did not start in 60 seconds")
 
 
 class TestWebcamModule(TestWEI_Base):
