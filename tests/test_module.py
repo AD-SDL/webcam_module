@@ -23,7 +23,7 @@ class TestWEI_Base(unittest.TestCase):
         self.server_host = self.workcell.config.server_host
         self.server_port = self.workcell.config.server_port
         self.url = f"http://{self.server_host}:{self.server_port}"
-        self.module_url = "http://localhost:2000"
+        self.module_url = "http://webcam_module:2000"
         self.redis_host = self.workcell.config.redis_host
 
         # Check to see that server is up
@@ -37,6 +37,15 @@ class TestWEI_Base(unittest.TestCase):
             time.sleep(1)
             if time.time() - start_time > 60:
                 raise TimeoutError("Server did not start in 60 seconds")
+        while True:
+            try:
+                if requests.get(self.module_url + "/state").status_code == 200:
+                    break
+            except Exception:
+                pass
+            time.sleep(1)
+            if time.time() - start_time > 60:
+                raise TimeoutError("Module did not start in 60 seconds")
 
 
 class TestWebcamModule(TestWEI_Base):
