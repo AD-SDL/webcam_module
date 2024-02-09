@@ -30,6 +30,7 @@ python src/webcam_rest_node.py --host 0.0.0.0 --port 2000
 3. Open the `.env` file and ensure that all values are set and correct.
     1. Check that the `USER_ID` and `GROUP_ID` are correct, as these ensure correct file permissions (in most cases, they should match your user's UID and GID)
     2. Check that the `WEI_DATA_DIR` and `REDIS_DIR` directories exist and have the appropriate permissions
+    3. The `DEVICE` variable can be used to determine which camera device is used by the module
 
 ```bash
 # Build and run just the module

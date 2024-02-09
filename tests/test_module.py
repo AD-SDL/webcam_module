@@ -53,7 +53,7 @@ class TestWebcamModule(TestWEI_Base):
 
     def test_take_picture_action(self):
         """Tests that the take_picture action works"""
-        exp = ExperimentClient(self.server_host, self.server_port, "")
+        exp = ExperimentClient(self.server_host, self.server_port, "webcam_module_test")
 
         result = exp.start_run(
             Path(self.root_dir) / Path("tests/workflow_defs/test_workflow.yaml"),
