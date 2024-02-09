@@ -1,70 +1,21 @@
 name: webcam_module
 services:
-  ###########
-  # Modules #
-  ###########
   webcam_module:
     container_name: webcam_module
     image: ${IMAGE}
     build:
       context: .
       dockerfile: Dockerfile
+      tags:
+        - ${IMAGE}:latest
+        - ${IMAGE}:${PROJECT_VERSION}
+        - ${IMAGE}:dev
     command: python webcam_module/src/webcam_rest_node.py --port 2000
     privileged: true
     env_file: .env
     volumes:
       - ${DEVICE}:/dev/video0
-      # - ./src:/home/app/webcam_module/src
-      # - ./tests:/home/app/webcam_module/tests
-      # - ${WEI_DATA_DIR}:/home/app/.wei
+      - ./src:/home/app/webcam_module/src
+      - ./tests:/home/app/webcam_module/tests
     ports:
       - 2000:2000
-    depends_on:
-      - wei_server
-      - wei_engine
-      - wei_redis
-
-  #####################
-  # WEI Core Services #
-  #####################
-  wei_server:
-    image: ghcr.io/ad-sdl/wei
-    container_name: wei_server
-    ports:
-      - 8000:8000
-    volumes:
-      - ${WORKCELLS_DIR}:/workcell_defs
-      - ${WEI_DATA_DIR}:/home/app/.wei
-      - diaspora_config:/home/app/.diaspora
-    env_file: .env
-    command: python3 -m wei.server --workcell /workcell_defs/${WORKCELL_FILENAME} --use_diaspora ${USE_DIASPORA}
-    depends_on:
-      - wei_redis
-  wei_engine:
-    image: ghcr.io/ad-sdl/wei
-    container_name: wei_engine
-    volumes:
-      - ${WORKCELLS_DIR}:/workcell_defs
-      - ${WEI_DATA_DIR}:/home/app/.wei
-    env_file: .env
-    environment:
-     - PYTHONUNBUFFERED=1 # Fix weird bug with empty logging
-    command: python3 -m wei.engine --workcell /workcell_defs/${WORKCELL_FILENAME} --use_diaspora ${USE_DIASPORA}
-    depends_on:
-      - wei_redis
-      - wei_server
-  wei_redis:
-    image: redis
-    container_name: wei_redis
-    ports:
-      - 6379:6379
-    volumes:
-      - ${REDIS_DIR}:/data
-    command: redis-server --save 60 1 --loglevel warning
-
-################
-# Data Storage #
-################
-volumes:
-  diaspora_config:
-    driver: local

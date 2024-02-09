@@ -20,7 +20,7 @@ RUN --mount=type=cache,target=/root/.cache \
 
 CMD ["python", "webcam_module/src/webcam_rest_node.py"]
 
-#########################################
-
 # Add user to video group to access webcam
 RUN usermod -a -G video app
+
+#########################################
