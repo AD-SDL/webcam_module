@@ -1,4 +1,9 @@
-# webcam_module
+# DEPRECATED: webcam_module
+
+
+Note: this module is deprecated in favor of the [camera_module](https://github.com/ad-sdl/camera_module). Please switch any existing workcells over. This module is archived and will not continue to recieve updates or support.
+
+---
 
 A simple module that supports taking snapshots with a webcam or other video device.
 
